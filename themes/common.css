@@ -112,3 +112,7 @@
     border-width: thin;
     border-top-width: 0;
 }
+
+footer {
+    display: none !important;
+}

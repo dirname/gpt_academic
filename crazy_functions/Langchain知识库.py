@@ -1,7 +1,12 @@
 from toolbox import CatchException, update_ui, ProxyNetworkActivate, update_ui_lastest_msg
 from .crazy_utils import request_gpt_model_in_new_thread_with_ui_alive, get_files_from_everything
 
+@CatchException
+def 暂不支持(txt, llm_kwargs, plugin_kwargs, chatbot, history, system_prompt, web_port=-1):
+    history = []    # 清空历史，以免输入溢出
 
+    chatbot.append(["无法使用", "Web 版暂不支持该插件"])
+    yield from update_ui(chatbot=chatbot, history=history) # 刷新界面
 
 @CatchException
 def 知识库问答(txt, llm_kwargs, plugin_kwargs, chatbot, history, system_prompt, web_port):

@@ -122,11 +122,15 @@ def predict(inputs, llm_kwargs, plugin_kwargs, chatbot, history=[], system_promp
     """
     if is_any_api_key(inputs):
         chatbot._cookies['api_key'] = inputs
-        chatbot.append(("输入已识别为openai的api_key", what_keys(inputs)))
-        yield from update_ui(chatbot=chatbot, history=history, msg="api_key已导入") # 刷新界面
+        chatbot.append(("输入已识别为 PuerHub AI 的令牌", what_keys(inputs)))
+        yield from update_ui(chatbot=chatbot, history=history, msg="PuerHub AI 令牌已导入") # 刷新界面
         return
     elif not is_any_api_key(chatbot._cookies['api_key']):
-        chatbot.append((inputs, "缺少api_key。\n\n1. 临时解决方案：直接在输入区键入api_key，然后回车提交。\n\n2. 长效解决方案：在config.py中配置。"))
+        chatbot.append((inputs, """
+**仅** 可 **[PuerHub AI](https://ai.puerhub.xyz)** 生成的令牌进行使用 !👉 [点击这里](https://ai.puerhub.xyz/token) 生成令牌 🔑!
+
+**推荐**👍使用 **本地版** 运行, **独享本地计算资源(更快处理文件)**, **无需每次输入令牌**, 为你提供更流畅安全的体验 !🚀[点击这里](https://puerhub.yuque.com/org-wiki-vtcqi0/fuxcn8/vi4uegpwm99ur4c7#afn8U) 查看本地版运行手册📖 !
+        """))
         yield from update_ui(chatbot=chatbot, history=history, msg="缺少api_key") # 刷新界面
         return
 
@@ -289,8 +293,11 @@ def generate_payload(inputs, llm_kwargs, history, system_prompt, stream):
     what_i_ask_now["content"] = inputs
     messages.append(what_i_ask_now)
 
+    if str(llm_kwargs['llm_model']).startswith('api2d'):
+        llm_kwargs['llm_model'] = llm_kwargs['llm_model'][5:]
+
     payload = {
-        "model": llm_kwargs['llm_model'].strip('api2d-'),
+        "model": llm_kwargs['llm_model'],
         "messages": messages, 
         "temperature": llm_kwargs['temperature'],  # 1.0,
         "top_p": llm_kwargs['top_p'],  # 1.0,

@@ -18,8 +18,8 @@ def main():
     from themes.theme import adjust_theme, advanced_css, theme_declaration, load_dynamic_theme
 
     initial_prompt = "Serve me as a writing and programming assistant."
-    title_html = f"<h1 align=\"center\">GPT 学术优化 {get_current_version()}</h1>{theme_declaration}"
-    description =  "Github源代码开源和更新[地址🚀](https://github.com/binary-husky/gpt_academic), "
+    title_html = f"<h1 align=\"center\">PuerHub AI 学术助手 {get_current_version()}</h1>{theme_declaration}"
+    description =  "Github源代码开源和更新[地址🚀](https://github.com/puerhub/gpt_academic), fork from [binary-husky/gpt_academic](https://github.com/binary-husky/gpt_academic) "
     description += "感谢热情的[开发者们❤️](https://github.com/binary-husky/gpt_academic/graphs/contributors)."
     description += "</br></br>常见问题请查阅[项目Wiki](https://github.com/binary-husky/gpt_academic/wiki), "
     description += "如遇到Bug请前往[Bug反馈](https://github.com/binary-husky/gpt_academic/issues)."
@@ -68,8 +68,15 @@ def main():
         CHATBOT_HEIGHT /= 2
 
     cancel_handles = []
-    with gr.Blocks(title="GPT 学术优化", theme=set_theme, analytics_enabled=False, css=advanced_css) as demo:
+    with gr.Blocks(title="PuerHub AI 学术助手 - AI Academic Assistant", theme=set_theme, analytics_enabled=False, css=advanced_css) as demo:
         gr.HTML(title_html)
+        gr.Markdown("""
+**仅** 可 **[PuerHub AI](https://ai.puerhub.xyz)** 生成的令牌进行使用 !👉 [点击这里](https://ai.puerhub.xyz/token) 生成令牌 🔑!
+
+🚨 Web 版默认文件上传大小为 **25M**, 超过此大小无法上传且界面上无响应, 请在上传前自行检查文件大小
+
+**推荐**👍使用 **本地版** 运行, **独享本地计算资源(更快处理文件)**, **无需每次输入令牌**, 为你提供更流畅安全的体验 !🚀[点击这里](https://puerhub.yuque.com/org-wiki-vtcqi0/fuxcn8/vi4uegpwm99ur4c7#afn8U) 查看本地版运行手册📖 !
+        """)
         secret_css, dark_mode = gr.Textbox(visible=False), gr.Textbox(DARK_MODE, visible=False)
         cookies = gr.State(load_chat_cookies())
         with gr_L1():
@@ -80,7 +87,7 @@ def main():
             with gr_L2(scale=1, elem_id="gpt-panel"):
                 with gr.Accordion("输入区", open=True, elem_id="input-panel") as area_input_primary:
                     with gr.Row():
-                        txt = gr.Textbox(show_label=False, placeholder="Input question here.").style(container=False)
+                        txt = gr.Textbox(show_label=False, placeholder="首次使用请输入令牌，类似 sk-************************************************，可以到 https://ai.puerhub.xyz 生成").style(container=False)
                     with gr.Row():
                         submitBtn = gr.Button("提交", elem_id="elem_submit", variant="primary")
                     with gr.Row():
@@ -91,7 +98,7 @@ def main():
                         with gr.Row():
                             audio_mic = gr.Audio(source="microphone", type="numpy", streaming=True, show_label=False).style(container=False)
                     with gr.Row():
-                        status = gr.Markdown(f"Tip: 按Enter提交, 按Shift+Enter换行。当前模型: {LLM_MODEL} \n {proxy_info}", elem_id="state-panel")
+                        status = gr.Markdown(f"Tip: 按Enter提交, 按Shift+Enter换行。当前模型: {LLM_MODEL}", elem_id="state-panel")
                 with gr.Accordion("基础功能区", open=True, elem_id="basic-panel") as area_basic_fn:
                     with gr.Row():
                         for k in functional:
@@ -134,10 +141,10 @@ def main():
 
         with gr.Floating(init_x="0%", init_y="0%", visible=True, width=None, drag="forbidden"):
             with gr.Row():
-                with gr.Tab("上传文件", elem_id="interact-panel"):
-                    gr.Markdown("请上传本地文件/压缩包供“函数插件区”功能调用。请注意: 上传文件后会自动把输入区修改为相应路径。")
-                    file_upload_2 = gr.Files(label="任何文件, 推荐上传压缩文件(zip, tar)", file_count="multiple")
-    
+                # with gr.Tab("上传文件", elem_id="interact-panel"):
+                #     gr.Markdown("请上传本地文件/压缩包供“函数插件区”功能调用。请注意: 上传文件后会自动把输入区修改为相应路径。")
+                #     file_upload_2 = gr.Files(label="任何文件, 推荐上传压缩文件(zip, tar)", file_count="multiple")
+                #
                 with gr.Tab("更换模型 & Prompt", elem_id="interact-panel"):
                     md_dropdown = gr.Dropdown(AVAIL_LLM_MODELS, value=LLM_MODEL, label="更换LLM模型/请求源").style(container=False)
                     top_p = gr.Slider(minimum=-0, maximum=1.0, value=1.0, step=0.01,interactive=True, label="Top-p (nucleus sampling)",)
@@ -211,7 +218,7 @@ def main():
             cancel_handles.append(click_handle)
         # 文件上传区，接收文件后与chatbot的互动
         file_upload.upload(on_file_uploaded, [file_upload, chatbot, txt, txt2, checkboxes, cookies], [chatbot, txt, txt2, cookies])
-        file_upload_2.upload(on_file_uploaded, [file_upload_2, chatbot, txt, txt2, checkboxes, cookies], [chatbot, txt, txt2, cookies])
+        # file_upload_2.upload(on_file_uploaded, [file_upload_2, chatbot, txt, txt2, checkboxes, cookies], [chatbot, txt, txt2, cookies])
         # 函数插件-固定按钮区
         for k in plugins:
             if not plugins[k].get("AsButton", True): continue

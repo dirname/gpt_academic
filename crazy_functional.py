@@ -58,19 +58,19 @@ def get_crazy_functions():
             "Info": "载入对话历史存档 | 输入参数为路径",
             "Function": HotReload(载入对话历史存档)
         },
-        "删除所有本地对话历史记录（谨慎操作）": {
-            "Group": "对话",
-            "AsButton": False,
-            "Info": "删除所有本地对话历史记录，谨慎操作 | 不需要输入参数",
-            "Function": HotReload(删除所有本地对话历史记录)
-        },
-        "清除所有缓存文件（谨慎操作）": {
-            "Group": "对话",
-            "Color": "stop",
-            "AsButton": False,  # 加入下拉菜单中
-            "Info": "清除所有缓存文件，谨慎操作 | 不需要输入参数",
-            "Function": HotReload(清除缓存)
-        },
+        # "删除所有本地对话历史记录（谨慎操作）": {
+        #     "Group": "对话",
+        #     "AsButton": False,
+        #     "Info": "删除所有本地对话历史记录，谨慎操作 | 不需要输入参数",
+        #     "Function": HotReload(删除所有本地对话历史记录)
+        # },
+        # "清除所有缓存文件（谨慎操作）": {
+        #     "Group": "对话",
+        #     "Color": "stop",
+        #     "AsButton": False,  # 加入下拉菜单中
+        #     "Info": "清除所有缓存文件，谨慎操作 | 不需要输入参数",
+        #     "Function": HotReload(清除缓存)
+        # },
         "批量总结Word文档": {
             "Group": "学术",
             "Color": "stop",
@@ -184,13 +184,13 @@ def get_crazy_functions():
             "Info": "保存当前的对话 | 不需要输入参数",
             "Function": HotReload(对话历史存档)
         },
-        "[多线程Demo]解析此项目本身（源码自译解）": {
-            "Group": "对话|编程",
-            "AsButton": False,  # 加入下拉菜单中
-            "Info": "多线程解析并翻译此项目的源码 | 不需要输入参数",
-            "Function": HotReload(解析项目本身)
-        },
-        "[插件demo]历史上的今天": {
+        # "[多线程Demo]解析此项目本身（源码自译解）": {
+        #     "Group": "对话|编程",
+        #     "AsButton": False,  # 加入下拉菜单中
+        #     "Info": "多线程解析并翻译此项目的源码 | 不需要输入参数",
+        #     "Function": HotReload(解析项目本身)
+        # },
+        "[插件演示]历史上的今天": {
             "Group": "对话",
             "AsButton": True,
             "Info": "查看历史上的今天事件 | 不需要输入参数",
@@ -295,7 +295,7 @@ def get_crazy_functions():
     try:
         from crazy_functions.联网的ChatGPT import 连接网络回答问题
         function_plugins.update({
-            "连接网络回答问题（输入问题后点击该插件，需要访问谷歌）": {
+            "连接网络回答问题（输入问题后点击该插件，谷歌引擎）": {
                 "Group": "对话",
                 "Color": "stop",
                 "AsButton": False,  # 加入下拉菜单中
@@ -339,7 +339,7 @@ def get_crazy_functions():
                 "Color": "stop",
                 "AsButton": False,
                 "AdvancedArgs": True,  # 调用时，唤起高级参数输入区（默认False）
-                "ArgsReminder": "支持任意数量的llm接口，用&符号分隔。例如chatglm&gpt-3.5-turbo&api2d-gpt-4",  # 高级参数输入区的显示提示
+                "ArgsReminder": "支持任意数量的llm接口，用&符号分隔。例如 gpt-3.5-turbo&gpt-4 (填写不支持的模型则会跳过)",  # 高级参数输入区的显示提示
                 "Function": HotReload(同时问询_指定模型)
             },
         })
@@ -349,7 +349,7 @@ def get_crazy_functions():
     try:
         from crazy_functions.图片生成 import 图片生成
         function_plugins.update({
-            "图片生成（先切换模型到openai或api2d）": {
+            "图片生成（先切换到 OpenAI 系列模型）": {
                 "Group": "对话",
                 "Color": "stop",
                 "AsButton": False,
@@ -370,7 +370,7 @@ def get_crazy_functions():
                 "Color": "stop",
                 "AsButton": False,
                 "AdvancedArgs": True,
-                "ArgsReminder": "调用openai api 使用whisper-1模型, 目前支持的格式:mp4, m4a, wav, mpga, mpeg, mp3。此处可以输入解析提示，例如：解析为简体中文（默认）。",
+                "ArgsReminder": "使用 whisper-1 模型, 目前支持的格式:mp4, m4a, wav, mpga, mpeg, mp3。此处可以输入解析提示，例如：解析为简体中文（默认）。",
                 "Info": "批量总结音频或视频 | 输入参数为路径",
                 "Function": HotReload(总结音视频)
             }
@@ -378,19 +378,19 @@ def get_crazy_functions():
     except:
         print('Load function plugin failed')
 
-    try:
-        from crazy_functions.数学动画生成manim import 动画生成
-        function_plugins.update({
-            "数学动画生成（Manim）": {
-                "Group": "对话",
-                "Color": "stop",
-                "AsButton": False,
-                "Info": "按照自然语言描述生成一个动画 | 输入参数是一段话",
-                "Function": HotReload(动画生成)
-            }
-        })
-    except:
-        print('Load function plugin failed')
+    # try:
+    #     from crazy_functions.数学动画生成manim import 动画生成
+    #     function_plugins.update({
+    #         "数学动画生成（Manim）": {
+    #             "Group": "对话",
+    #             "Color": "stop",
+    #             "AsButton": False,
+    #             "Info": "按照自然语言描述生成一个动画 | 输入参数是一段话",
+    #             "Function": HotReload(动画生成)
+    #         }
+    #     })
+    # except:
+    #     print('Load function plugin failed')
 
     try:
         from crazy_functions.批量Markdown翻译 import Markdown翻译指定语言
@@ -408,30 +408,30 @@ def get_crazy_functions():
         print('Load function plugin failed')
 
     try:
-        from crazy_functions.Langchain知识库 import 知识库问答
+        from crazy_functions.Langchain知识库 import 暂不支持
         function_plugins.update({
-            "构建知识库（先上传文件素材,再运行此插件）": {
+            "构建知识库（Web 版暂不支持）": {
                 "Group": "对话",
                 "Color": "stop",
                 "AsButton": False,
                 "AdvancedArgs": True,
-                "ArgsReminder": "此处待注入的知识库名称id, 默认为default。文件进入知识库后可长期保存。可以通过再次调用本插件的方式，向知识库追加更多文档。",
-                "Function": HotReload(知识库问答)
+                "ArgsReminder": "Web 版暂不支持",
+                "Function": HotReload(暂不支持)
             }
         })
     except:
         print('Load function plugin failed')
 
     try:
-        from crazy_functions.Langchain知识库 import 读取知识库作答
+        from crazy_functions.Langchain知识库 import 暂不支持
         function_plugins.update({
-            "知识库问答（构建知识库后,再运行此插件）": {
+            "知识库问答（Web 版暂不支持）": {
                 "Group": "对话",
                 "Color": "stop",
                 "AsButton": False,
                 "AdvancedArgs": True,
-                "ArgsReminder": "待提取的知识库名称id, 默认为default, 您需要构建知识库后再运行此插件。",
-                "Function": HotReload(读取知识库作答)
+                "ArgsReminder": "Web 版暂不支持",
+                "Function": HotReload(暂不支持)
             }
         })
     except:

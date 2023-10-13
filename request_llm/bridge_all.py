@@ -38,13 +38,13 @@ class LazyloadTiktoken(object):
         tmp = tiktoken.encoding_for_model(model)
         print('加载tokenizer完毕')
         return tmp
-    
+
     def encode(self, *args, **kwargs):
-        encoder = self.get_encoder(self.model) 
+        encoder = self.get_encoder(self.model)
         return encoder.encode(*args, **kwargs)
-    
+
     def decode(self, *args, **kwargs):
-        encoder = self.get_encoder(self.model) 
+        encoder = self.get_encoder(self.model)
         return encoder.decode(*args, **kwargs)
 
 # Endpoint 重定向
@@ -57,7 +57,7 @@ azure_endpoint = AZURE_ENDPOINT + f'openai/deployments/{AZURE_ENGINE}/chat/compl
 # 兼容旧版的配置
 try:
     API_URL, = get_conf("API_URL")
-    if API_URL != "https://api.openai.com/v1/chat/completions": 
+    if API_URL != "https://api.openai.com/v1/chat/completions":
         openai_endpoint = API_URL
         print("警告！API_URL配置选项将被弃用，请更换为API_URL_REDIRECT配置")
 except:
@@ -89,7 +89,7 @@ model_info = {
         "tokenizer": tokenizer_gpt35,
         "token_cnt": get_token_num_gpt35,
     },
-    
+
     "gpt-3.5-turbo-16k": {
         "fn_with_ui": chatgpt_ui,
         "fn_without_ui": chatgpt_noui,
@@ -134,7 +134,7 @@ model_info = {
         "tokenizer": tokenizer_gpt4,
         "token_cnt": get_token_num_gpt4,
     },
-    
+
     # azure openai
     "azure-gpt-3.5":{
         "fn_with_ui": chatgpt_ui,
@@ -202,13 +202,13 @@ model_info = {
 
 # -=-=-=-=-=-=- 以下部分是新加入的模型，可能附带额外依赖 -=-=-=-=-=-=-
 if "claude-1-100k" in AVAIL_LLM_MODELS or "claude-2" in AVAIL_LLM_MODELS:
-    from .bridge_claude import predict_no_ui_long_connection as claude_noui
-    from .bridge_claude import predict as claude_ui
+    # from .bridge_claude import predict_no_ui_long_connection as claude_noui
+    # from .bridge_claude import predict as claude_ui
     model_info.update({
         "claude-1-100k": {
-            "fn_with_ui": claude_ui,
-            "fn_without_ui": claude_noui,
-            "endpoint": None,
+            "fn_with_ui": chatgpt_ui,
+            "fn_without_ui": chatgpt_noui,
+            "endpoint": openai_endpoint,
             "max_token": 8196,
             "tokenizer": tokenizer_gpt35,
             "token_cnt": get_token_num_gpt35,
@@ -216,9 +216,9 @@ if "claude-1-100k" in AVAIL_LLM_MODELS or "claude-2" in AVAIL_LLM_MODELS:
     })
     model_info.update({
         "claude-2": {
-            "fn_with_ui": claude_ui,
-            "fn_without_ui": claude_noui,
-            "endpoint": None,
+            "fn_with_ui": chatgpt_ui,
+            "fn_without_ui": chatgpt_noui,
+            "endpoint": openai_endpoint,
             "max_token": 8196,
             "tokenizer": tokenizer_gpt35,
             "token_cnt": get_token_num_gpt35,
@@ -486,6 +486,7 @@ def predict_no_ui_long_connection(inputs, llm_kwargs, history, sys_prompt, obser
     n_model = 1
     if '&' not in model:
         assert not model.startswith("tgui"), "TGUI不支持函数插件的实现"
+        assert model in AVAIL_LLM_MODELS, ('暂不支持该模型 %s' % AVAIL_LLM_MODELS)
 
         # 如果只询问1个大语言模型：
         method = model_info[model]["fn_without_ui"]
@@ -495,8 +496,9 @@ def predict_no_ui_long_connection(inputs, llm_kwargs, history, sys_prompt, obser
         # 如果同时询问多个大语言模型，这个稍微啰嗦一点，但思路相同，您不必读这个else分支
         executor = ThreadPoolExecutor(max_workers=4)
         models = model.split('&')
+        models = [model for model in models if model in AVAIL_LLM_MODELS]
         n_model = len(models)
-        
+
         window_len = len(observe_window)
         assert window_len==3
         window_mutex = [["", time.time(), ""] for _ in range(n_model)] + [True]
@@ -515,7 +517,7 @@ def predict_no_ui_long_connection(inputs, llm_kwargs, history, sys_prompt, obser
                 time.sleep(0.25)
                 if not window_mutex[-1]: break
                 # 看门狗（watchdog）
-                for i in range(n_model): 
+                for i in range(n_model):
                     window_mutex[i][1] = observe_window[1]
                 # 观察窗（window）
                 chat_string = []

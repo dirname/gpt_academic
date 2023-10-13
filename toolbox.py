@@ -667,14 +667,14 @@ def what_keys(keys):
         if is_azure_api_key(k): 
             avail_key_list['Azure Key'] += 1
 
-    return f"检测到： OpenAI Key {avail_key_list['OpenAI Key']} 个, Azure Key {avail_key_list['Azure Key']} 个, API2D Key {avail_key_list['API2D Key']} 个"
+    return f"检测到： PuerHub AI 令牌 {avail_key_list['OpenAI Key']} 个, Azure Key {avail_key_list['Azure Key']} 个, API2D Key {avail_key_list['API2D Key']} 个"
 
 def select_api_key(keys, llm_model):
     import random
     avail_key_list = []
     key_list = keys.split(',')
 
-    if llm_model.startswith('gpt-'):
+    if llm_model.startswith('gpt-') or llm_model.startswith('claude-'):
         for k in key_list:
             if is_openai_api_key(k): avail_key_list.append(k)
 
@@ -687,7 +687,7 @@ def select_api_key(keys, llm_model):
             if is_azure_api_key(k): avail_key_list.append(k)
 
     if len(avail_key_list) == 0:
-        raise RuntimeError(f"您提供的api-key不满足要求，不包含任何可用于{llm_model}的api-key。您可能选择了错误的模型或请求源（右下角更换模型菜单中可切换openai,azure,claude,api2d等请求源）。")
+        raise RuntimeError(f"您提供的 PuerHub AI 令牌不满足要求, 无法使用{llm_model}! 这可能是 PuerHub AI 不支持该模型或您使用了错误的 PuerHub API 令牌请重新到 [点击这里](https://ai.puerhub.xyz/token) 生成令牌 🔑")
 
     api_key = random.choice(avail_key_list) # 随机负载均衡
     return api_key
