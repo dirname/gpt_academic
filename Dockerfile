@@ -16,9 +16,10 @@ RUN python3 -m pip install zh_langchain==0.2.1 pypinyin
 RUN python3 -m pip install rarfile py7zr
 RUN python3 -m pip install aliyun-python-sdk-core==2.13.3 pyOpenSSL scipy git+https://github.com/aliyun/alibabacloud-nls-python-sdk.git
 # 下载分支
-WORKDIR /gpt
-RUN git clone --depth=1 https://github.com/dirname/gpt_academic.git
-WORKDIR /gpt/gpt_academic
+#WORKDIR /gpt
+#RUN git clone --depth=1 https://github.com/dirname/gpt_academic.git
+#WORKDIR /gpt/gpt_academic
+COPY . .
 
 RUN python3 -m pip install -r requirements.txt
 RUN python3 -m pip install nougat-ocr
